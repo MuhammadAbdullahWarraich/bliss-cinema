@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}Book Movie{% endblock %}
+
+{% block body %}
+<h1>{{ showtime.movie.original_title }}</h1>
+<p>{{ showtime.movie.description }}</p>
+{% if showtime.available_tickets >= 1 %}
+<form method="post" action="{% url 'book_movie' %}?showtime_id={{ showtime.id }}">
+    {% csrf_token %}
+    <input type="hidden" name="showtime_id" value="{{ showtime.id }}">
+    Number of tickets: <input type="number" name="num_tickets" value="1" min="1" max="{{ showtime.available_tickets }}"><br>
+    <input type="submit" value="Book">
+</form>
+{% else %}
+<p>No more tickets available!</p>
+{% endif %}
+{% endblock %}
