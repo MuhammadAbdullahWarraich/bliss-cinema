@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
 
 class Movie(models.Model):
     id = models.AutoField(primary_key=True)
@@ -42,10 +43,16 @@ class Showtime(models.Model):
         return f"{self.movie} - {self.show_date} {self.show_time} - Hall {self.hall.id} - available_tickets {self.available_tickets}"
 
     def save(self, *args, **kwargs):
-        if self.available_tickets > self.hall.available_seats:
-            self.available_tickets = self.hall.available_seats
-            # raise ValidationError("Available tickets cannot exceed available seats in the hall.")
+        if self.available_tickets is not None and self.hall.available_seats is not None:
+            print(type(self.available_tickets))
+            if self.available_tickets > self.hall.available_seats:
+                raise ValidationError("Not enough available seats")
         super().save(*args, **kwargs)
+
+
+#@receiver(pre_save, sender=Showtime)
+def update_tickets_field(sender, instance, **kwargs):
+    instance.available_tickets = instance.hall.available_seats
 
 class Booking(models.Model):
     id = models.AutoField(primary_key=True)

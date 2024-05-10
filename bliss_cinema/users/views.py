@@ -70,15 +70,12 @@ def user_book_movie(request):
         num_tickets = int(request.POST.get('num_tickets', 1))
         showtime = Showtime.objects.get(pk=showtime_id)
         if showtime:
-            booking = Booking.objects.create(user=request.user, showtime=showtime, num_tickets=num_tickets)
             if showtime.available_tickets >= num_tickets:
+                booking = Booking.objects.create(user=request.user, showtime=showtime, num_tickets=num_tickets)
                 print("i am gonna reduce tickets")
-                showtime.available_tickets = F('available_tickets') - num_tickets
+                showtime.available_tickets = showtime.available_tickets - num_tickets
                 showtime.save()
-                print(showtime)
-                booking.save()
-            return redirect('my_booked_movies')
-    
+                return redirect('my_booked_movies')
     # Fetch movies that have corresponding entries in the Showtime model
     movies_list = list(set(map(lambda showtime: showtime.movie, Showtime.objects.all())))
     return render(request, 'book_movie.html', {"movies_list": movies_list})
