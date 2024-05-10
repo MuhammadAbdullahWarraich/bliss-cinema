@@ -42,13 +42,10 @@ class Showtime(models.Model):
         return f"{self.movie} - {self.show_date} {self.show_time} - Hall {self.hall.id} - available_tickets {self.available_tickets}"
 
     def save(self, *args, **kwargs):
-        # Automatically set the number of tickets to the available seats in the hall
-        self.available_tickets = self.hall.available_seats
-        super(Showtime, self).save(*args, **kwargs)
-
-@receiver(pre_save, sender=Showtime)
-def update_tickets_field(sender, instance, **kwargs):
-    instance.available_tickets = instance.hall.available_seats
+        if self.available_tickets > self.hall.available_seats:
+            self.available_tickets = self.hall.available_seats
+            # raise ValidationError("Available tickets cannot exceed available seats in the hall.")
+        super().save(*args, **kwargs)
 
 class Booking(models.Model):
     id = models.AutoField(primary_key=True)
