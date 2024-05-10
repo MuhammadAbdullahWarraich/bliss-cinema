@@ -1,17 +1,40 @@
 {% extends "layout.html" %}
 
 {% block title %}Top Movies{% endblock %}
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
+{% endblock %}
 {% block body %}
 <h1>Top Movies</h1>
-
+<div class="container">
+    <h1 class="mt-5">Top Movies</h1>
+    <div class="row mt-4">
 {% for top_movie in top_movies_list %}
-    <div class="movie-card">
-        <h2>{{ top_movie.movie.original_title }}</h2>
-        <div><img src="{{ top_movie.movie.poster.url }}" height=200px width="auto"></div>
-        <p>{{ top_movie.movie.description }}</p>
-        <!-- Add the Book Now button -->
-        <a href="{% url 'book_movie_detail1' movie_id=top_movie.movie.showtime.all.first %}" class="btn btn-primary">Book Now</a>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ top_movie.movie.original_title }}</h5>
+                    <div><img src="{{ top_movie.movie.poster.url }}" height=700px width="auto"></div>
+                    <ul class="list-unstyled">
+                        {% for showtime in top_movie.movie.showtime.all %}
+                        <li>
+                            Showtime: {{ showtime.show_date }} {{ showtime.show_time }} Tickets: {{ showtime.available_tickets }}
+                            <a href="{% url 'book_movie_detail1' showtime.id %}" class="btn btn-primary btn-sm ml-2">Book Now</a>
+                        </li>
+                        {% empty %}
+                        <li>No showtimes for this movie<li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p>No showtimes available!</p>
+        </div>
+        {% endfor %}
     </div>
-{% endfor %}
+    </div>
 {% endblock %}

@@ -13,7 +13,7 @@ class LoginForm(forms.Form):
 
 
 class ShowtimeSearchForm(forms.Form):
-    date = forms.DateField(label='Date', widget=forms.DateInput(attrs={'type': 'date'}))
+    date = forms.DateField(label='date', widget=forms.DateInput(attrs={'type': 'date'}))
 
 class BookShowtimeForm(forms.Form):
     showtime_id = forms.IntegerField()

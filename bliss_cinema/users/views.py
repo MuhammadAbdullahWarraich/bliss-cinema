@@ -4,7 +4,7 @@ from .forms import SignupForm, LoginForm,  ShowtimeSearchForm
 from .models import *
 from django.http import HttpResponse
 from .management.commands import scrape, clear_lists
-
+from django.db.models import F
 
 # Create your views here.
 # Home page
@@ -72,8 +72,10 @@ def user_book_movie(request):
         if showtime:
             booking = Booking.objects.create(user=request.user, showtime=showtime, num_tickets=num_tickets)
             if showtime.available_tickets >= num_tickets:
-                showtime.available_tickets -= num_tickets
+                print("i am gonna reduce tickets")
+                showtime.available_tickets = F('available_tickets') - num_tickets
                 showtime.save()
+                print(showtime)
                 booking.save()
             return redirect('my_booked_movies')
     

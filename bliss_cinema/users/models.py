@@ -39,7 +39,7 @@ class Showtime(models.Model):
     hall = models.ForeignKey(Hall, on_delete=models.CASCADE, related_name='showtimes')
     available_tickets = models.IntegerField()
     def __str__(self):
-        return f"{self.movie} - {self.show_date} {self.show_time} - Hall {self.hall.id}"
+        return f"{self.movie} - {self.show_date} {self.show_time} - Hall {self.hall.id} - available_tickets {self.available_tickets}"
 
     def save(self, *args, **kwargs):
         # Automatically set the number of tickets to the available seats in the hall

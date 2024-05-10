@@ -23,7 +23,7 @@
                     <ul class="list-unstyled">
                         {% for showtime in movie.showtime.all %}
                         <li>
-                            Showtime: {{ showtime.show_date }} {{ showtime.show_time }}
+                            Showtime: {{ showtime.show_date }} {{ showtime.show_time }} Tickets: {{ showtime.available_tickets }}
                             <a href="{% url 'book_movie_detail1' showtime.id %}" class="btn btn-primary btn-sm ml-2">Book Now</a>
                         </li>
                         {% empty %}
